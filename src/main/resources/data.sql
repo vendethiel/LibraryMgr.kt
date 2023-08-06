@@ -1,0 +1,11 @@
+INSERT INTO book (title, description) VALUES ('A Song of Ice And Fire I', 'Never-ending book series');
+INSERT INTO book (title, description) VALUES ('A Song of Ice And Fire II', 'Never-ending book series');
+INSERT INTO book (title, description) VALUES ('A Song of Ice And Fire III', 'Never-ending book series');
+INSERT INTO book (title, description) VALUES ('A Song of Ice And Fire IV', 'Never-ending book series');
+INSERT INTO book (title, description) VALUES ('A Song of Ice And Fire V', 'Never-ending book series');
+INSERT INTO author (name) VALUES ('J.R.R. Martin');
+INSERT INTO author_book (author_id, book_id) VALUES (1, 1);
+INSERT INTO author_book (author_id, book_id) VALUES (1, 2);
+INSERT INTO author_book (author_id, book_id) VALUES (1, 3);
+INSERT INTO author_book (author_id, book_id) VALUES (1, 4);
+INSERT INTO author_book (author_id, book_id) VALUES (1, 5);

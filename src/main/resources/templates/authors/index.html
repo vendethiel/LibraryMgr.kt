@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Authors</h1>
+    <div id="authors">
+        <div class="author" th:each="author: ${authors}">
+            <a class="author-title" th:text="${author.name}" th:href="@{/authors/{id}(id=${author.id})}"></a>
+        </div>
+    </div>
+</body>
+</html>

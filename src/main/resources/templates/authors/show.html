@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1 th:text="${author.name}"></h1>
+
+    <h3>Book(s)</h3>
+    <ul>
+        <li th:each="book: ${author.books}">
+            <a th:text="${book.title}" th:href="@{/books/{id}(id=${book.id})}"></a>
+        </li>
+    </ul>
+</body>
+</html>
