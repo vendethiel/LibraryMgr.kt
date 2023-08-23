@@ -4,10 +4,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import org.vendethiel.librarymgr.library.exception.BookNotFoundException
 import org.vendethiel.librarymgr.library.model.Book
 import org.vendethiel.librarymgr.library.repository.BookRepository
@@ -37,5 +34,17 @@ class BookController(private val repository: BookRepository) {
     @ResponseBody
     fun getData(@PathVariable id: Long): Book {
         return repository.findByIdWithAuthors(id).orElseThrow { BookNotFoundException(id) }
+    }
+
+    @PostMapping(produces = [MediaType.TEXT_HTML_VALUE])
+    fun createHTML(@RequestBody bookData: Book, model: Model): String {
+        val book = repository.save(bookData)
+        model["book"] = book
+        return "books/show"
+    }
+
+    @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
+    fun createData(@RequestBody bookData: Book, model: Model): Book {
+        return repository.save(bookData)
     }
 }

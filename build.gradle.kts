@@ -52,7 +52,9 @@ dependencies {
     testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-//    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("com.ninja-squad:springmockk:4.0.0")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyManagement {

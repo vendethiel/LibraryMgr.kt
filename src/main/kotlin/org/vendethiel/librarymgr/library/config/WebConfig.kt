@@ -14,10 +14,12 @@ class WebConfig : WebMvcConfigurer {
         configurer
             .favorParameter(true)
             .parameterName("mediaType")
-            .ignoreAcceptHeader(false)
-            .defaultContentType(MediaType.TEXT_HTML)
-            .mediaType("html", MediaType.TEXT_HTML)
-            .mediaType("xml", MediaType.APPLICATION_XML)
+            // Ignore accept header so that we can receive JSON by default in the browser
+            //  (without needing ?mediaType=json)
+            .ignoreAcceptHeader(true)
+            .defaultContentType(MediaType.APPLICATION_JSON)
+//            .mediaType("html", MediaType.TEXT_HTML)
+//            .mediaType("xml", MediaType.APPLICATION_XML)
             .mediaType("json", MediaType.APPLICATION_JSON)
     }
 }
