@@ -97,4 +97,7 @@ class AuthorControllerTest(
         mvc.perform(get("/authors/123"))
             .andExpect(status().isNotFound)
     }
+
+    // TODO test create
+    // TODO test create already exists
 }

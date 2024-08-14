@@ -12,12 +12,12 @@ import org.vendethiel.librarymgr.library.service.AuthorService
 @RequestMapping("/authors")
 class AuthorController(private val service: AuthorService) {
     @GetMapping("", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
-    fun listData(): Iterable<Author> {
+    fun list(): Iterable<Author> {
         return service.list()
     }
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
-    fun getData(@PathVariable id: Long): Author? {
+    fun get(@PathVariable id: Long): Author? {
         return service.find(id)
     }
 }
