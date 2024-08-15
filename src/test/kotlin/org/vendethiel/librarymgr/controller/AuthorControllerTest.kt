@@ -23,6 +23,16 @@ class AuthorControllerTest(
     lateinit var authorService: AuthorService
 
     @Test
+    fun listEmpty() {
+        every { authorService.list() } returns listOf()
+
+        mvc.perform(get("/authors"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.length()").value(0))
+    }
+
+    @Test
     fun listGivesAnAuthor() {
         val author = Author("Lee J", listOf(), 1)
         every { authorService.list() } returns listOf(author)

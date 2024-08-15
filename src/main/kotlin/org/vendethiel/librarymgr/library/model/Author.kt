@@ -17,7 +17,6 @@ data class Author(
         joinColumns = [JoinColumn(name = "author_id")],
         inverseJoinColumns = [JoinColumn(name = "book_id")]
     )
-
     @JsonIgnoreProperties("authors")
     val books: List<Book> = listOf(),
 
