@@ -12,6 +12,9 @@ class BookService(private val repository: BookRepository) {
     fun find(id: Long): Book =
         unwrap404(id, repository.findByIdWithAuthors(id))
 
+    fun getByISBN(isbn: String): Book? =
+        repository.findByISBNWithAuthors(isbn)
+
     fun list(): Iterable<Book> =
         repository.findAllWithAuthors()
 

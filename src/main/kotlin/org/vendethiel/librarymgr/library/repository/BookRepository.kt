@@ -17,4 +17,8 @@ interface BookRepository : PagingAndSortingRepository<Book, Long>, CrudRepositor
     @EntityGraph("Book.authors")
     @Query("select b from Book b join fetch b.authors a")
     fun findAllWithAuthors(): Iterable<Book>
+
+    @EntityGraph("Book.authors")
+    @Query("select b from Book b join fetch b.authors a where b.isbn = :isbn")
+    fun findByISBNWithAuthors(isbn: String): Book?
 }

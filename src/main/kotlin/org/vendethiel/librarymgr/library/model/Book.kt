@@ -10,8 +10,8 @@ import jakarta.persistence.*
 )
 data class Book(
     var title: String,
-
     var description: String,
+    var isbn: String,
 
     @ManyToMany(mappedBy = "books")
     @JsonIgnoreProperties("books")

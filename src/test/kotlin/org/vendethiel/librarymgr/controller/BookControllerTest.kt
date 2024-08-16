@@ -32,7 +32,7 @@ class BookControllerTest(
 
     @Test
     fun listGivesABook() {
-        val book = Book("Dictionary", "List of words", listOf(), 1)
+        val book = Book("Dictionary", "List of words", "1", listOf(), 1)
         every { bookService.list() } returns listOf(book)
 
         mvc.perform(get("/books"))
@@ -48,9 +48,9 @@ class BookControllerTest(
     @Test
     fun listGivesAllBooks() {
         val books = listOf(
-            Book("Dictionary", "List of words", listOf(), 1),
-            Book("Encyclopedia", "List of things", listOf(), 2),
-            Book("Thesaurus", "List of synonyms", listOf(), 3),
+            Book("Dictionary", "List of words", "1", listOf(), 1),
+            Book("Encyclopedia", "List of things", "2", listOf(), 2),
+            Book("Thesaurus", "List of synonyms", "3", listOf(), 3),
         )
         every { bookService.list() } returns books
 

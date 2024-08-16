@@ -10,6 +10,7 @@ import jakarta.persistence.*
 )
 data class Author(
     val name: String,
+    val viaf: String, // Virtual International Authority File
 
     @ManyToMany
     @JoinTable(

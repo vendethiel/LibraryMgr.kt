@@ -34,7 +34,7 @@ class AuthorControllerTest(
 
     @Test
     fun listGivesAnAuthor() {
-        val author = Author("Lee J", listOf(), 1)
+        val author = Author("Lee J", "1", listOf(), 1)
         every { authorService.list() } returns listOf(author)
 
         mvc.perform(get("/authors"))
@@ -49,9 +49,9 @@ class AuthorControllerTest(
     @Test
     fun listGivesAllAuthors() {
         val authors = listOf(
-            Author("Lee J", listOf(), 1),
-            Author("Billie J", listOf(), 2),
-            Author("Foolish", listOf(), 5),
+            Author("Lee J", "1", listOf(), 1),
+            Author("Billie J", "2", listOf(), 2),
+            Author("Foolish", "3", listOf(), 5),
         )
         every { authorService.list() } returns authors
 
@@ -66,7 +66,7 @@ class AuthorControllerTest(
 
     @Test
     fun findAuthorById() {
-        val author = Author("Lee J", listOf(), 1)
+        val author = Author("Lee J", "1", listOf(), 1)
         every { authorService.find(1) } returns author
 
         mvc.perform(get("/authors/1"))
@@ -80,10 +80,10 @@ class AuthorControllerTest(
     @Test
     fun authorIncludesBooks() {
         val books = listOf(
-            Book("Sailing Away", "Come Sail Away"),
-            Book("Long Gone", "Far Gone"),
+            Book("Sailing Away", "Come Sail Away", "1"),
+            Book("Long Gone", "Far Gone", "2"),
         )
-        val author = Author("Lee J", books, 1)
+        val author = Author("Lee J", "1", books, 1)
         every { authorService.find(1) } returns author
 
         mvc.perform(get("/authors/1"))
