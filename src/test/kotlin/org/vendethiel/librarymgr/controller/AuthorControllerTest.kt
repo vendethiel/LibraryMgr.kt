@@ -34,7 +34,7 @@ class AuthorControllerTest(
 
     @Test
     fun listGivesAnAuthor() {
-        val author = Author("Lee J", "1", listOf(), 1)
+        val author = Author("Lee J", "1", mutableListOf(), 1)
         every { authorService.list() } returns listOf(author)
 
         mvc.perform(get("/authors"))
@@ -49,9 +49,9 @@ class AuthorControllerTest(
     @Test
     fun listGivesAllAuthors() {
         val authors = listOf(
-            Author("Lee J", "1", listOf(), 1),
-            Author("Billie J", "2", listOf(), 2),
-            Author("Foolish", "3", listOf(), 5),
+            Author("Lee J", "1", mutableListOf(), 1),
+            Author("Billie J", "2", mutableListOf(), 2),
+            Author("Foolish", "3", mutableListOf(), 5),
         )
         every { authorService.list() } returns authors
 
@@ -66,7 +66,7 @@ class AuthorControllerTest(
 
     @Test
     fun findAuthorById() {
-        val author = Author("Lee J", "1", listOf(), 1)
+        val author = Author("Lee J", "1", mutableListOf(), 1)
         every { authorService.find(1) } returns author
 
         mvc.perform(get("/authors/1"))
@@ -79,9 +79,9 @@ class AuthorControllerTest(
 
     @Test
     fun authorIncludesBooks() {
-        val books = listOf(
-            Book("Sailing Away", "Come Sail Away", "1"),
-            Book("Long Gone", "Far Gone", "2"),
+        val books = mutableListOf(
+            Book("Sailing Away", "Come Sail Away", "1", mutableListOf(), 1),
+            Book("Long Gone", "Far Gone", "2", mutableListOf(), 2),
         )
         val author = Author("Lee J", "1", books, 1)
         every { authorService.find(1) } returns author
@@ -108,6 +108,7 @@ class AuthorControllerTest(
             .andExpect(status().isNotFound)
     }
 
+    // TODO filter by name
     // TODO test create
     // TODO test create already exists
 }

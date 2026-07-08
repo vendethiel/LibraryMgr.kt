@@ -8,10 +8,10 @@ import jakarta.persistence.*
     name = "Author.books",
     attributeNodes = [NamedAttributeNode("books")]
 )
-data class Author(
-    val name: String,
+class Author(
+    var name: String,
     @Column(unique=true)
-    val viaf: String, // Virtual International Authority File
+    var viaf: String, // Virtual International Authority File
 
     @ManyToMany
     @JoinTable(
@@ -20,9 +20,9 @@ data class Author(
         inverseJoinColumns = [JoinColumn(name = "book_id")]
     )
     @JsonIgnoreProperties("authors")
-    val books: List<Book> = listOf(),
+    var books: MutableList<Book> = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    var id: Long? = null
 )

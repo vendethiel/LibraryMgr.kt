@@ -3,6 +3,8 @@ package org.vendethiel.librarymgr.library.controller
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.vendethiel.librarymgr.library.model.Book
+import org.vendethiel.librarymgr.library.result.BookResult
+import org.vendethiel.librarymgr.library.result.BookWithAuthorsResult
 import org.vendethiel.librarymgr.library.service.BookService
 
 @RestController
@@ -11,17 +13,17 @@ class BookController(private val service: BookService) {
 
     @GetMapping("", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
     @ResponseBody
-    fun list(): Iterable<Book> =
-        service.list()
+    fun list(): Iterable<BookWithAuthorsResult> =
+        service.list().map { BookWithAuthorsResult.fromModel(it) }
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
     @ResponseBody
-    fun get(@PathVariable id: Long): Book =
-        service.find(id)
+    fun get(@PathVariable id: Long): BookWithAuthorsResult? =
+        service.find(id).let { BookWithAuthorsResult.fromModel(it) }
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
-    fun create(@RequestBody bookData: Book): Book =
-        service.create(bookData)
+    fun create(@RequestBody bookData: Book): BookResult =
+        BookResult.fromModel(service.create(bookData))
 
     // TODO live() method that returns a Reactor
 }

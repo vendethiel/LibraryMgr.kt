@@ -1,0 +1,11 @@
+type Author {
+}
+
+type Books {
+}
+
+type Queries {
+}
+
+type Mutation {
+}

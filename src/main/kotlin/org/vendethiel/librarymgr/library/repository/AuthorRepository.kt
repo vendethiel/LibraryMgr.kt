@@ -17,4 +17,8 @@ interface AuthorRepository : PagingAndSortingRepository<Author, Long>, CrudRepos
     @EntityGraph("Author.books")
     @Query("select a from Author a join fetch a.books b")
     fun findAllWithBooks(): Iterable<Author>
+
+    @EntityGraph("Author.books")
+    @Query("select a from Author a join fetch a.books b where a.name like %?1")
+    fun filterByNameWithBooks(name: String): Iterable<Author>
 }

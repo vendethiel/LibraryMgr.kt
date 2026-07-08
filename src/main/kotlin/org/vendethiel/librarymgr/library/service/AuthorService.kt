@@ -15,6 +15,9 @@ class AuthorService(private val repository: AuthorRepository) {
     fun list(): Iterable<Author> =
         repository.findAllWithBooks()
 
+    fun filterByName(name: String): Iterable<Author> =
+        repository.filterByNameWithBooks(name)
+
     fun create(author: Author): Author {
         author.id?.let { throw AuthorAlreadyExistsException(it) }
         return repository.save(author)
