@@ -10,6 +10,7 @@ import jakarta.persistence.*
 )
 data class Author(
     val name: String,
+    @Column(unique=true)
     val viaf: String, // Virtual International Authority File
 
     @ManyToMany

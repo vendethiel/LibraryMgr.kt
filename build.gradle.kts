@@ -1,90 +1,99 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.springframework.boot") version "3.2.2"
-    id("io.spring.dependency-management") version "1.1.4"
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "2.0.10"
-    kotlin("plugin.jpa") version "1.8.22"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    id("org.springframework.boot") version "4.1.0"
+    id("io.spring.dependency-management") version "1.1.7"
+    id("org.asciidoctor.jvm.convert") version "4.0.5"
+    kotlin("plugin.jpa") version "2.3.21"
 }
 
 group = "org.vendethiel"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-}
-
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(20)
     }
 }
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://repo.spring.io/milestone") }
 }
 
+extra["snippetsDir"] = file("build/generated-snippets")
+extra["springModulithVersion"] = "2.1.0"
+
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web:3.3.2")
+    implementation("org.springframework.boot:spring-boot-h2console")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-batch")
+    implementation("org.springframework.boot:spring-boot-starter-batch-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
-//    implementation("org.springframework.boot:spring-boot-starter-security")
-//    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jobrunr:jobrunr-spring-boot-4-starter:8.7.0")
+    implementation("org.springframework.modulith:spring-modulith-observability-api")
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.springframework.modulith:spring-modulith-starter-jpa")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.9.0-RC.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0-RC.2")
-//    implementation("org.springframework.session:spring-session-core")
-//    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.h2database:h2")
-//    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.springframework.modulith:spring-modulith-actuator")
+    runtimeOnly("org.springframework.modulith:spring-modulith-observability-core")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.springframework.graphql:spring-graphql-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-batch-jdbc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-batch-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-rest-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-graphql-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-restdocs")
+    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("com.ninja-squad:springmockk:4.0.0")
-    testImplementation("org.springframework.security:spring-security-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.modulith:spring-modulith-bom:1.2.2")
+        mavenBom("org.springframework.modulith:spring-modulith-bom:${property("springModulithVersion")}")
     }
 }
 
-tasks.withType<KotlinCompile> {
+kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xjsr305=strict")
-        jvmTarget = JvmTarget.JVM_17
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
     }
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val snippetsDir by extra { file("build/generated-snippets") }
-
 tasks.test {
-    outputs.dir(snippetsDir)
+    outputs.dir(project.extra["snippetsDir"]!!)
 }
 
 tasks.asciidoctor {
-    inputs.dir(snippetsDir)
+    inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
 }

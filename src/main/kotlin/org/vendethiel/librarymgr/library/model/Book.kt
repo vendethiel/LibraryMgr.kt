@@ -11,6 +11,7 @@ import jakarta.persistence.*
 data class Book(
     var title: String,
     var description: String,
+    @Column(unique=true)
     var isbn: String,
 
     @ManyToMany(mappedBy = "books")

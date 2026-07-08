@@ -3,7 +3,6 @@ package org.vendethiel.librarymgr.library.service
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -23,7 +22,6 @@ class BookRefresherService(private val service: BookService, private val bookRef
         val apiBooks = bookRefresherWebClient
             .get()
             .uri("https://rawgit.com/vendethiel/3e9e79cda2e76b27e56bdb2abeba09a6/raw/books.json")
-            .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody<List<APIBook>>()
         logger.info("...${apiBooks.size} Books to process!")
