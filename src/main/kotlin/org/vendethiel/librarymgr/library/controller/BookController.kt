@@ -2,6 +2,7 @@ package org.vendethiel.librarymgr.library.controller
 
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import org.vendethiel.librarymgr.library.inputs.BookInput
 import org.vendethiel.librarymgr.library.model.Book
 import org.vendethiel.librarymgr.library.result.BookResult
 import org.vendethiel.librarymgr.library.result.BookWithAuthorsResult
@@ -22,8 +23,8 @@ class BookController(private val service: BookService) {
         service.find(id).let { BookWithAuthorsResult.fromModel(it) }
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
-    fun create(@RequestBody bookData: Book): BookResult =
-        BookResult.fromModel(service.create(bookData))
+    fun create(@RequestBody bookData: BookInput): BookResult =
+        BookResult.fromModel(service.create(bookData.toModel()))
 
     // TODO live() method that returns a Reactor
 }

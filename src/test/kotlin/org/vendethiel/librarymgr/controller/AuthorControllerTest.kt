@@ -2,6 +2,7 @@ package org.vendethiel.librarymgr.controller
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.slot
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
@@ -11,13 +12,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.vendethiel.librarymgr.library.controller.AuthorController
 import org.vendethiel.librarymgr.library.exception.AuthorNotFoundException
+import org.vendethiel.librarymgr.library.inputs.AuthorInput
 import org.vendethiel.librarymgr.library.model.Author
 import org.vendethiel.librarymgr.library.model.Book
 import org.vendethiel.librarymgr.library.service.AuthorService
+import tools.jackson.databind.json.JsonMapper
+import kotlin.test.assertEquals
 
 @WebMvcTest(AuthorController::class)
 class AuthorControllerTest(
-    @Autowired private val mvc: MockMvc
+    @Autowired private val mvc: MockMvc,
+    @Autowired private val jsonMapper: JsonMapper
 ) {
     @MockkBean
     lateinit var authorService: AuthorService
@@ -102,13 +107,46 @@ class AuthorControllerTest(
 
     @Test
     fun nonExistingAuthor404s() {
-        every { authorService.find(any()) } throws AuthorNotFoundException(0)
+        every { authorService.find(123) } throws AuthorNotFoundException(0)
 
         mvc.perform(get("/authors/123"))
             .andExpect(status().isNotFound)
     }
 
-    // TODO filter by name
-    // TODO test create
-    // TODO test create already exists
+    @Test
+    fun searchByName() {
+        val authors = mutableListOf(
+            Author("Lee J", "1", mutableListOf(), 1)
+        )
+        every { authorService.filterByName("ee") } returns authors
+
+        mvc.perform(get("/authors/search").queryParam("name", "ee"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$.[0].id").value(1))
+            .andExpect(jsonPath("$.[0].name").value("Lee J"))
+            .andExpect(jsonPath("$.[0].viaf").value("1"))
+            .andExpect(jsonPath("$.[0].books.length()").value(0))
+    }
+
+    @Test
+    fun create() {
+        val input = AuthorInput("Lee J", "1")
+        val slot = slot<Author>()
+        every { authorService.create(capture(slot)) } returns Author("Lee J", "1", mutableListOf(), 1)
+
+        mvc.perform(
+            post("/authors")
+                .contentType(MediaType.APPLICATION_JSON).content(jsonMapper.writeValueAsString(input))
+        ).andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.name").value("Lee J"))
+            .andExpect(jsonPath("$.viaf").value("1"))
+            .andExpect(jsonPath("$.books").doesNotExist())
+            .andExpect(jsonPath("$.id").isNumber)
+
+        assertEquals(slot.captured.name, input.name)
+        assertEquals(slot.captured.viaf, input.viaf)
+    }
 }
