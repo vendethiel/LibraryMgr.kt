@@ -12,6 +12,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.vendethiel.librarymgr.library.model.BookId
 
 @WebMvcTest(BookController::class)
 class BookControllerTest(
@@ -32,7 +33,7 @@ class BookControllerTest(
 
     @Test
     fun listGivesABook() {
-        val book = Book("Dictionary", "List of words", "1", mutableListOf(), 1)
+        val book = Book("Dictionary", "List of words", "1", mutableListOf(), BookId(1))
         every { bookService.list() } returns listOf(book)
 
         mvc.perform(get("/books"))
@@ -48,9 +49,9 @@ class BookControllerTest(
     @Test
     fun listGivesAllBooks() {
         val books = listOf(
-            Book("Dictionary", "List of words", "1", mutableListOf(), 1),
-            Book("Encyclopedia", "List of things", "2", mutableListOf(), 2),
-            Book("Thesaurus", "List of synonyms", "3", mutableListOf(), 3),
+            Book("Dictionary", "List of words", "1", mutableListOf(), BookId(1)),
+            Book("Encyclopedia", "List of things", "2", mutableListOf(), BookId(2)),
+            Book("Thesaurus", "List of synonyms", "3", mutableListOf(), BookId(3)),
         )
         every { bookService.list() } returns books
 

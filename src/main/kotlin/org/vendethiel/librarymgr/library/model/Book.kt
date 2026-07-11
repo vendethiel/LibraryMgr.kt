@@ -2,6 +2,8 @@ package org.vendethiel.librarymgr.library.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 // XXX consider making all fields nullable so that they're usable for search-by-example?
 @Entity
@@ -20,6 +22,7 @@ class Book(
     var authors: MutableList<Author> = mutableListOf(),
 
     @Id
+    @JdbcTypeCode(SqlTypes.NUMERIC)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: BookId? = null
 )

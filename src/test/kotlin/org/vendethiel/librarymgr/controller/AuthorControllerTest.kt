@@ -15,6 +15,7 @@ import org.vendethiel.librarymgr.library.exception.AuthorNotFoundException
 import org.vendethiel.librarymgr.library.inputs.AuthorInput
 import org.vendethiel.librarymgr.library.model.Author
 import org.vendethiel.librarymgr.library.model.Book
+import org.vendethiel.librarymgr.library.model.BookId
 import org.vendethiel.librarymgr.library.service.AuthorService
 import tools.jackson.databind.json.JsonMapper
 import kotlin.test.assertEquals
@@ -85,8 +86,8 @@ class AuthorControllerTest(
     @Test
     fun authorIncludesBooks() {
         val books = mutableListOf(
-            Book("Sailing Away", "Come Sail Away", "1", mutableListOf(), 1),
-            Book("Long Gone", "Far Gone", "2", mutableListOf(), 2),
+            Book("Sailing Away", "Come Sail Away", "1", mutableListOf(), BookId(1)),
+            Book("Long Gone", "Far Gone", "2", mutableListOf(), BookId(2)),
         )
         val author = Author("Lee J", "1", books, 1)
         every { authorService.find(1) } returns author
@@ -149,4 +150,6 @@ class AuthorControllerTest(
         assertEquals(slot.captured.name, input.name)
         assertEquals(slot.captured.viaf, input.viaf)
     }
+
+    // TODO update
 }
