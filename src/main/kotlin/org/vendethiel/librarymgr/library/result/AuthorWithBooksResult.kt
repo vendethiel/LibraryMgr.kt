@@ -8,7 +8,7 @@ data class AuthorWithBooksResult(val id: Long, val name: String, val viaf: Strin
         fun fromModel(author: Author): AuthorWithBooksResult {
             val id = author.id ?: throw ResultSerializationError(Author::class, "id")
             val books = author.books.map { BookResult.fromModel(it) }
-            return AuthorWithBooksResult(id, author.name, author.viaf, books)
+            return AuthorWithBooksResult(id, author.name, author.viaf ?: "", books) // TODO make viaf non-null
         }
     }
 }

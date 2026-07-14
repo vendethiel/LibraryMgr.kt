@@ -2,6 +2,7 @@ package org.vendethiel.librarymgr.library.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.*
+import org.hibernate.annotations.JavaType
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
@@ -23,6 +24,7 @@ class Book(
 
     @Id
     @JdbcTypeCode(SqlTypes.NUMERIC)
+    @JavaType(BookIdJavaType::class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: BookId? = null
 )
